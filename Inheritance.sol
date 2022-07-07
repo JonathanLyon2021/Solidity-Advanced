@@ -24,3 +24,21 @@ contract SafeMath {
     }
 
 }
+
+contract Owned {
+
+    address contractOwner;
+
+    constructor() public {
+        contractOwner = msg.sender;
+    }
+
+    modifier onlyOwner() {
+        require(contractOwner == msg.sender, "Only Contract Owner is authorized");
+        _;
+    }
+
+    function changeOwner(address newOwner) public onlyOwner {
+       contractOwner = newOwner;
+    }
+}
