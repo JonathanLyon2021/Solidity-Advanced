@@ -42,3 +42,19 @@ contract Owned {
        contractOwner = newOwner;
     }
 }
+
+contract SafeMathImplementation is Owned, SafeMath {
+
+    int256 x;
+    uint private lastStateChange;
+
+    function stateVar() public onlyOwner returns(int) {
+        x = add(x, int(now % 256));
+        x = multiply(x, int(now - lastStateChange));
+        x = subtract(x, int(block.gaslimit));
+        lastStateChange = now;
+        return x;
+    }
+
+}
+
