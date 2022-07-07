@@ -4,12 +4,12 @@ contract SafeMath {
 
     function add(int a, int b) internal pure returns (int) {
         int c = a + b;
-        require(c >= a, "Addition: Interger overflow");
+        require(c >= a, "Addition: Integer overflow");
         return c;
     }
 
     function subtract(int a, int b) internal pure returns (int) {
-        require(a >= b, "Subtract: Interger underflow");
+        require(a >= b, "Subtract: Integer underflow");
         int c = a - b;
         return c;
     }
@@ -19,7 +19,7 @@ contract SafeMath {
             return 0;
         }
         int c = a * b;
-        require(c / a == b, "Multiplication: Interger overflow");
+        require(c / a == b, "Multiplication: Integer overflow");
         return c;
     }
 
