@@ -36,3 +36,31 @@ contract PetAdpotion {
         pets["parrot"] = 0;
         pets["rabbit"] = 0;
     }
+     function isCustomer(string memory name)
+    internal
+    returns(bool)
+    {
+        if(allCustomers.length == 0) return false;
+
+        return keccak256(bytes(name)) == keccak256(bytes(allCustomers[Customers[name].index]));
+    }
+
+    modifier onlyOwner() {
+        require(owner == msg.sender, "Only Shop Owner is authorized");
+        _;
+    }
+
+    modifier onlyAllowed(string memory animal) {
+        require(allowedPets[animal], "Animal provided is not allowed");
+        _;
+    }
+
+    modifier inTime(string memory customer) {
+        durationTime = Customers[customer].time + 5 minutes;
+        require(now <= durationTime, "Out of Time: Deadline to return your pet has been reached");
+        _;
+    }
+
+    function addPets(string memory animal, uint amount) public onlyOwner onlyAllowed(animal) {
+        pets[animal] += amount;
+    }
