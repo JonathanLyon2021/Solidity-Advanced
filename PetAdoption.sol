@@ -98,3 +98,31 @@ contract PetAdpotion {
         pets[animal]--;
         return true;
     }
+    function returnPet(string memory customer, string memory pet) inTime(customer) public onlyAllowed(pet)
+    returns(bool successfulReturn) {
+        require(isCustomer(customer), "Must be a previous customer");
+        require(keccak256(bytes(Customers[customer].pet)) == keccak256(bytes(pet)), "Returning Pet does not match animal purchased");
+        Customers[customer].pet = "RETURNED";
+        pets[pet]++;
+        return true;
+    }
+
+    function getReceipt(string memory customer) public view returns(uint cAge,
+    string memory cGender,
+    string memory pet,
+    uint timeOfPurchase) {
+        return (Customers[customer].age,
+        Customers[customer].gender,
+        Customers[customer].pet,
+        Customers[customer].time);
+    }
+
+    function getPetCount(string memory animal) public view returns(uint amount) {
+        return(pets[animal]);
+    }
+
+    function getInventory() public view returns(uint amount) {
+        return(pets["fish"] + pets["cat"] + pets["dog"] + pets["parrot"] + pets["rabbit"]);
+    }
+
+}
