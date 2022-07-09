@@ -64,3 +64,37 @@ contract PetAdpotion {
     function addPets(string memory animal, uint amount) public onlyOwner onlyAllowed(animal) {
         pets[animal] += amount;
     }
+    function buyPet(string memory customer,
+    uint cAge,
+    string memory cGender,
+    string memory animal)
+    public onlyAllowed(animal)
+    returns(bool successfulTransaction) {
+
+        require(pets[animal] > 0, "Animal is no longer in stock");
+
+        if (isCustomer(customer)) {
+            require(keccak256(bytes(Customers[customer].pet)) == keccak256(bytes("RETURNED")),
+            "Only One pet for a Lifetime");
+
+        } else if (keccak256(bytes(cGender)) == keccak256(bytes("male"))) {
+
+            require(keccak256(bytes(animal)) == keccak256(bytes("dog"))
+            || keccak256(bytes(animal)) == keccak256(bytes("fish")),
+                "You, Sir, are only allowed a pet Dog or Fish");
+            Customers[customer].index = allCustomers.push(customer)-1;
+
+        } else if (keccak256(bytes(cGender)) == keccak256(bytes("female")) && cAge < 40) {
+
+            require(keccak256(bytes(animal)) != keccak256(bytes("cat")), "You, Madam, are not allowed a Cat yet");
+            Customers[customer].index = allCustomers.push(customer)-1;
+        }
+
+        Customers[customer].gender = cGender;
+        Customers[customer].age = cAge;
+        Customers[customer].pet = animal;
+        Customers[customer].time = block.timestamp;
+
+        pets[animal]--;
+        return true;
+    }
